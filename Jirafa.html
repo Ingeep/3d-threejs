@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>JIRAFA</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+        <script src="js/OrbitControls.js"></script>
+		<script>
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			const renderer = new THREE.WebGLRenderer();
+			renderer.shadowMap.enabled = true;
+			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+            // Desde aqui----------------------:
+            
+            //Textura del piso Hierba:
+			const texturapasto = new THREE.TextureLoader().load('textures/grass.jpg' );
+			texturapasto.wrapS = THREE.RepeatWrapping;
+			texturapasto.wrapT = THREE.RepeatWrapping;
+
+			// El piso:
+			const geometrySuelo = new THREE.PlaneGeometry( 65, 60);
+			const materialSuelo = new THREE.MeshLambertMaterial( {map: texturapasto, side: THREE.DoubleSide} );
+			const Suelo = new THREE.Mesh( geometrySuelo, materialSuelo );
+			scene.add( Suelo );
+			Suelo.receiveShadow =true;
+			Suelo.rotation.x = Math.PI/2
+			Suelo.position.y = -2.1
+
+            const unGrado = Math.PI/180
+
+            // --------- GEOMETRIAS Y MATERIALES ------------ :
+            //MATERIAL DE PRUEBA Y AJUSTE:
+            const materialppp = new THREE.MeshLambertMaterial( {color: "red", side: THREE.DoubleSide} );
+
+            //MATERIAL PARA EL CUERPO EN GENERAL:
+            const materialCuerpoG = new THREE.MeshLambertMaterial( {color: "#ffa11c", side: THREE.DoubleSide} );
+            //MATERIAL PARA MANCHAS, NARIZ Y ANTENAS:
+            const materialmanchas = new THREE.MeshLambertMaterial( {color: "#b0462e", side: THREE.DoubleSide} );
+            //MATERIAL PARA MANCHAS, NARIZ Y ANTENAS:
+            const materialojos = new THREE.MeshLambertMaterial( {color: "black", side: THREE.DoubleSide} );
+
+            //GEOMETRIA Y MATERIAL PARA PARTE DE ABAJO DE LAS PATAS:
+            const geoPParteAbajo = new THREE.BoxGeometry( 0.7, 0.4, 0.7 );
+            const materialPPA = new THREE.MeshLambertMaterial( {color: "#514f50"} ); 
+            //GEOMETRIA Y MATERIAL PARA PARTE DE EN MEDIO DE LAS PATAS:
+            const geoPParteMedio = new THREE.BoxGeometry( 0.7, 0.8, 0.7 );
+            const materialPPM = new THREE.MeshLambertMaterial( {color: "#dbc480"} ); //fee797
+            //GEOMETRIA PARA PARTE FINAL DE LAS PATAS TRASERAS:
+            const geoPTParteFinal = new THREE.BoxGeometry( 0.7, 2.2, 0.7 ); 
+            //GEOMETRIA PARA PARTE FINAL DE LAS PATAS DELANTERAS:
+            const geoPParteFinal = new THREE.BoxGeometry( 0.7, 3.2, 0.7 );
+            //GEOMETRIA PARA INCLINACION DE LAS PATAS TRASERAS:
+            const geoInclinacionPT = new THREE.BoxGeometry( 0.7, 1.92, 0.7 );
+            //GEOMETRIA PARA PRIMERA PARTE DEL CUERPO:
+            const geoCuerpoPrte1 = new THREE.BoxGeometry( 2.84, 1.4, 2.3);
+            //GEOMETRIA PARA SEGUNDA PARTE DEL CUERPO:
+            const geoCuerpoParte2 = new THREE.BoxGeometry( 2.84, 0.8, 1.4);
+            //GEOMETRIA PARA LA PARTE INCLINADA DEL CUERPO:
+            const geoCuerpoParteI = new THREE.BoxGeometry( 2.84, 0.5, 1.52);      
+
+            // -------------- ESPACIO PARA PATAS DELANTERAS: ---------------
+
+            //((((Pata derecha)))):
+
+            // Parte de abajo pata derecha:
+            const pDerParteAbajo = new THREE.Mesh( geoPParteAbajo, materialPPA );
+            scene.add( pDerParteAbajo );
+            pDerParteAbajo.position.x = -3.5
+            pDerParteAbajo.position.y = -1.84
+            pDerParteAbajo.position.z = 13
+            pDerParteAbajo.receiveShadow = true;
+            pDerParteAbajo.castShadow = true;
+
+            // Parte del medio pata derecha:
+            const pDerParteMedio = new THREE.Mesh( geoPParteMedio, materialPPM );
+            scene.add( pDerParteMedio );
+            pDerParteMedio.position.x = -3.5
+            pDerParteMedio.position.y = -1.24
+            pDerParteMedio.position.z = 13
+            pDerParteMedio.receiveShadow = true;
+            pDerParteMedio.castShadow = true;
+
+            // Parte final pata derecha:
+            const pDerParteFinal = new THREE.Mesh( geoPParteFinal, materialCuerpoG );
+            scene.add( pDerParteFinal );
+            pDerParteFinal.position.x = -3.5
+            pDerParteFinal.position.y = 0.76
+            pDerParteFinal.position.z = 13
+            pDerParteFinal.receiveShadow = true;
+            pDerParteFinal.castShadow = true;
+
+            //((((Pata izquierda)))):
+
+            // Parte de abajo pata izquierda:
+            const pIzqParteAbajo = new THREE.Mesh( geoPParteAbajo, materialPPA );
+            scene.add( pIzqParteAbajo );
+            pIzqParteAbajo.position.x = -5.64
+            pIzqParteAbajo.position.y = -1.84
+            pIzqParteAbajo.position.z = 13
+            pIzqParteAbajo.receiveShadow = true;
+            pIzqParteAbajo.castShadow = true;
+
+            // Parte del medio pata izquierda:
+            const pIzqParteMedio = new THREE.Mesh( geoPParteMedio, materialPPM );
+            scene.add( pIzqParteMedio );
+            pIzqParteMedio.position.x = -5.64
+            pIzqParteMedio.position.y = -1.24
+            pIzqParteMedio.position.z = 13
+            pIzqParteMedio.receiveShadow = true;
+            pIzqParteMedio.castShadow = true;
+
+            // Parte final pata izquierda:
+            const pIzqParteFinal = new THREE.Mesh( geoPParteFinal, materialCuerpoG );
+            scene.add( pIzqParteFinal );
+            pIzqParteFinal.position.x = -5.64
+            pIzqParteFinal.position.y = 0.76
+            pIzqParteFinal.position.z = 13
+            pIzqParteFinal.receiveShadow = true;
+            pIzqParteFinal.castShadow = true;
+            
+
+            // -------------- ESPACIO PARA PATAS TRASERAS ---------------
+
+            //((((Pata derecha)))):
+
+            // Parte de abajo pata derecha:
+            const paDerParteAbajo = new THREE.Mesh( geoPParteAbajo, materialPPA );
+            scene.add( paDerParteAbajo ); 
+            paDerParteAbajo.position.x = -3.5
+            paDerParteAbajo.position.y = -1.84
+            paDerParteAbajo.position.z = 9.5
+            paDerParteAbajo.receiveShadow = true;
+            paDerParteAbajo.CastShadow = true;
+
+            // Parte del medio pata derecha:
+            const paDerParteMedio = new THREE.Mesh( geoPParteMedio, materialPPM );
+            scene.add( paDerParteMedio );
+            paDerParteMedio.position.x = -3.5
+            paDerParteMedio.position.y = -1.24
+            paDerParteMedio.position.z = 9.5
+            paDerParteMedio.receiveShadow = true;
+            paDerParteMedio.castShadow = true;
+
+            // Parte final pata derecha:
+            const paDerParteFinal = new THREE.Mesh( geoPTParteFinal, materialCuerpoG );
+            scene.add( paDerParteFinal );
+            paDerParteFinal.position.x = -3.5
+            paDerParteFinal.position.y = 0.26  
+            paDerParteFinal.position.z = 9.5
+            paDerParteFinal.receiveShadow = true;
+            paDerParteFinal.castShadow = true;
+
+            // Inclinacion pata trasera derecha:
+            const incPTDer = new THREE.Mesh( geoInclinacionPT, materialCuerpoG );
+            scene.add( incPTDer );
+            incPTDer.position.x = -3.5
+            incPTDer.position.y = 0.20
+            incPTDer.position.z = 9.88
+            incPTDer.rotation.x = Math.PI/8.5
+            incPTDer.receiveShadow = true;
+            incPTDer.castShadow = true;
+
+
+            //((((Pata izquierda)))):
+
+            // Parte de abajo pata izquierda:
+            const paIzqParteAbajo = new THREE.Mesh( geoPParteAbajo, materialPPA );
+            scene.add( paIzqParteAbajo );
+            paIzqParteAbajo.position.x = -5.64
+            paIzqParteAbajo.position.y = -1.84
+            paIzqParteAbajo.position.z = 9.5
+            paIzqParteAbajo.receiveShadow = true;
+            paIzqParteAbajo.castShadow = true;
+
+            // Parte del medio pata izquierda:
+            const paIzqParteMedio = new THREE.Mesh( geoPParteMedio, materialPPM );
+            scene.add( paIzqParteMedio );
+            paIzqParteMedio.position.x = -5.64
+            paIzqParteMedio.position.y = -1.24
+            paIzqParteMedio.position.z = 9.5
+            paIzqParteMedio.receiveShadow = true;
+            paIzqParteMedio.castShadow = true;
+
+            // Parte final pata izquierda:
+            const paIzqParteFinal = new THREE.Mesh( geoPTParteFinal, materialCuerpoG );
+            scene.add( paIzqParteFinal );
+            paIzqParteFinal.position.x = -5.64
+            paIzqParteFinal.position.y = 0.26
+            paIzqParteFinal.position.z = 9.5
+            paIzqParteFinal.receiveShadow = true;
+            paIzqParteFinal.castShadow = true;
+
+            // Inclinacion pata trasera izquierda:
+            const incPTIzq = new THREE.Mesh( geoInclinacionPT, materialCuerpoG );
+            scene.add( incPTIzq );
+            incPTIzq.position.x = -5.64
+            incPTIzq.position.y = 0.20
+            incPTIzq.position.z = 9.88
+            incPTIzq.rotation.x = Math.PI/8.5
+            incPTIzq.receiveShadow = true;
+            incPTIzq.castShadow = true;
+
+            //------------ ESPACIO PARA LA PRIMERA PARTE DEL CUERPO --------------
+            const cuerpoP1 = new THREE.Mesh( geoCuerpoPrte1, materialCuerpoG );
+            scene.add( cuerpoP1 );
+            cuerpoP1.position.x = -4.57
+            cuerpoP1.position.y = 1.66
+            cuerpoP1.position.z = 11.7
+            cuerpoP1.receiveShadow = true;
+            cuerpoP1.castShadow = true;
+
+            //------------ ESPACIO PARA LA SEGUNDA PARTE DEL CUERPO --------------
+            const cuerpoP2 = new THREE.Mesh( geoCuerpoParte2, materialCuerpoG );
+            scene.add( cuerpoP2 );
+            cuerpoP2.position.x = -4.57
+            cuerpoP2.position.y = 1.37
+            cuerpoP2.position.z = 9.85
+            cuerpoP2.receiveShadow = true;
+            cuerpoP2.castShadow = true;
+
+            //------------ ESPACIO PARA LA PARTE INCLINADA DEL CUERPO --------------
+            const cuerpoPI = new THREE.Mesh( geoCuerpoParteI, materialCuerpoG );
+            scene.add( cuerpoPI );
+            cuerpoPI.position.x = -4.57
+            cuerpoPI.position.y = 1.840
+            cuerpoPI.position.z = 9.95
+            cuerpoPI.rotation.x = unGrado*-22.5
+            cuerpoPI.receiveShadow = true;
+            cuerpoP1.castShadow = true;
+
+            //------------- PLANOS PARA TAPAR HOYOS QUE SE HACEN AL INCLINAR LA PARTE TRASERA DEL CUERPO: ----
+            const geoTaparHoyos = new THREE.PlaneGeometry( 0.4, 0.4);
+            const TaparOyo1 = new THREE.Mesh( geoTaparHoyos, materialCuerpoG );
+            //---------------------------------
+            TaparOyo1.position.x = -3.14
+            TaparOyo1.position.y = 1.9
+            TaparOyo1.position.z = 10.6
+            TaparOyo1.rotation.y = unGrado*90
+            TaparOyo1.receiveShadow = true;
+            TaparOyo1.castShadow = true;
+            scene.add(TaparOyo1)
+            //---------------------------------
+            const TaparOyo2 = new THREE.Mesh( geoTaparHoyos, materialCuerpoG );
+            TaparOyo2.position.x = -6
+            TaparOyo2.position.y = 1.9
+            TaparOyo2.position.z = 10.6
+            TaparOyo2.rotation.y = unGrado*90
+            TaparOyo2.receiveShadow = true;
+            TaparOyo2.castShadow = true;
+            scene.add(TaparOyo2)
+
+            //------------- LA COLA DE LA JIRAFA: ----
+            const geoCola = new THREE.BoxGeometry( 0.7, 0.8, 0.40);
+            const cola = new THREE.Mesh( geoCola, materialCuerpoG );
+            //---------------------------------
+            cola.position.x = -4.6
+            cola.position.y = 1.4
+            cola.position.z = 8.95
+            cola.receiveShadow = true;
+            cola.castShadow = true;
+            scene.add(cola)
+
+            //------------------------ ESPACIO PARA EL Cuello: ----------------------------
+            const geometryCuello = new THREE.CylinderGeometry( 0.5, 1.03, 5.4, 4 );
+            const cuello = new THREE.Mesh( geometryCuello, materialCuerpoG );
+            scene.add( cuello );
+            cuello.position.x = -4.56
+            cuello.position.y = 5.06
+            cuello.position.z = 13.2
+            cuello.rotation.y = unGrado*44
+            cuello.castShadow = true;
+
+            //------------------------ ESPACIO PARA LA PARTE DE ABAJO DEL CUELLO: ----------------------------
+            const geoCuerpoParteA= new THREE.BoxGeometry( 1.36, 1.2, 1.52);
+            const cuelloPA = new THREE.Mesh( geoCuerpoParteA, materialCuerpoG );
+            scene.add( cuelloPA );
+            cuelloPA.position.x = -4.56
+            cuelloPA.position.y = 2
+            cuelloPA.position.z = 13
+            cuelloPA.rotation.x = unGrado*-60
+            //cuelloPA.rotation.y = unGrado*44
+            cuelloPA.receiveShadow = true;
+            cuelloPA.castShadow = true;
+
+
+            // --------- ESPACIO PARA LA CABEZA: ---------------------------
+            
+            const pCabJirafa = new THREE.Shape();
+            pCabJirafa.moveTo(1.5, 1.5);
+            pCabJirafa.lineTo(3, 1.5);
+            pCabJirafa.lineTo(3, 2.5);
+            pCabJirafa.lineTo(2.5, 2.5);
+            pCabJirafa.lineTo(1.5, 1.80);
+            pCabJirafa.lineTo(1.5, 1.5);
+
+            const pCabJirafaextrudeSettings = {
+                steps: 2,
+                depth: 0.75,
+                bevelEnabled: false,
+                bevelThickness: 1,
+                bevelSize: 1,
+                bevelOffset: 0,
+                bevelSegments: 1
+            };
+
+            const geoCabeza = new THREE.ExtrudeGeometry(pCabJirafa, pCabJirafaextrudeSettings);
+            const Cabeza= new THREE.Mesh(geoCabeza, materialCuerpoG);
+            scene.add(Cabeza);
+            
+            Cabeza.castShadow = true;
+            Cabeza.position.x = -4.9
+            Cabeza.position.y = 6.25
+            Cabeza.position.z = 15.85
+            Cabeza.rotation.y = unGrado*90
+
+
+            // ------------------- ESPACIO PARA LA NARIZ: -----------------------------
+            const geoNariz = new THREE.PlaneGeometry( 0.18, 0.18);
+            // --- hoyo derecha ------- :
+            const NarizHDER = new THREE.Mesh( geoNariz, materialmanchas );
+            NarizHDER.position.x = -4.76
+            NarizHDER.position.y = 7.9
+            NarizHDER.position.z = 14.36
+            NarizHDER.receiveShadow = true;
+            NarizHDER.castShadow =  true;
+            scene.add(NarizHDER)
+
+
+            // --- hoyo izquierda ------- :
+            const NarizHIZQ = new THREE.Mesh( geoNariz, materialmanchas );
+            NarizHIZQ.position.x = -4.3
+            NarizHIZQ.position.y = 7.9
+            NarizHIZQ.position.z = 14.36
+            NarizHIZQ.receiveShadow = true;
+            NarizHIZQ.castShadow =  true;
+            scene.add(NarizHIZQ)
+
+            // ------------------- ESPACIO PARA LOS OJOS: -----------------------------
+            const geoOjos = new THREE.PlaneGeometry( 0.25, 0.25);
+            // --- hoyo derecha ------- :
+            const ojoDer = new THREE.Mesh( geoOjos, materialojos );
+            ojoDer.position.x = -4.91
+            ojoDer.position.y = 8.3
+            ojoDer.position.z = 13.58
+            ojoDer.rotation.y = unGrado*90
+            ojoDer.receiveShadow = true;
+            ojoDer.castShadow = true;
+            scene.add(ojoDer)
+
+            // --- hoyo izquierda ------- :
+            const ojoIzq = new THREE.Mesh( geoOjos, materialojos );
+            ojoIzq.position.x = -4.13
+            ojoIzq.position.y = 8.3
+            ojoIzq.position.z = 13.58
+            ojoIzq.rotation.y = unGrado*90
+            ojoIzq.receiveShadow = true;
+            ojoIzq.castShadow = true;
+            scene.add(ojoIzq)
+
+            // ------------------- ESPACIO PARA LAS OREJAS: -----------------------------
+            const geoOrejas = new THREE.BoxGeometry( 1.7, 0.2, 0.45);
+            // --- OREJAS ------- :
+            const OrejaDer = new THREE.Mesh( geoOrejas, materialCuerpoG );
+            OrejaDer.position.x = -4.5
+            OrejaDer.position.y = 8.43
+            OrejaDer.position.z = 13.09
+            OrejaDer.rotation.x = unGrado*90
+            OrejaDer.receiveShadow = true;
+            OrejaDer.castShadow = true;
+            scene.add(OrejaDer)
+
+            // ------------------- ESPACIO PARA Las Antenas: -----------------------------
+            // Geometria para los palitos de las antenas:
+            const geo1Antenas = new THREE.BoxGeometry( 0.1, 0.5, 0.1);
+            // --- OREJAS DERECHA ------- :
+            const antenaDer = new THREE.Mesh( geo1Antenas, materialCuerpoG );
+            antenaDer.position.x = -4.27
+            antenaDer.position.y = 8.9
+            antenaDer.position.z = 13.09
+            antenaDer.receiveShadow = true;
+            antenaDer.castShadow = true;
+
+            scene.add(antenaDer)
+            // --- OREJAS IZQUIERDA ------- :
+            const antenaIzq = new THREE.Mesh( geo1Antenas, materialCuerpoG );
+            antenaIzq.position.x = -4.78
+            antenaIzq.position.y = 8.9
+            antenaIzq.position.z = 13.09
+            antenaIzq.receiveShadow = true;
+            antenaIzq.castShadow = true;
+            scene.add(antenaIzq)
+
+                        // ------------------- ESPACIO PARTE DE ARRIBA DE LAS ANTENAS: -----------------------------
+            // Geometria para los palitos de las antenas:
+            const geo2Antenas = new THREE.BoxGeometry( 0.25, 0.2, 0.25);
+            // --- OREJAS DERECHA ------- :
+            const antenaDerPA = new THREE.Mesh( geo2Antenas, materialmanchas );
+            antenaDerPA.position.x = -4.27
+            antenaDerPA.position.y = 9.2
+            antenaDerPA.position.z = 13.09
+            antenaDerPA.receiveShadow = true;
+            antenaDerPA.castShadow = true;
+            scene.add(antenaDerPA)
+
+            // --- OREJAS IZQUIERDA ------- :
+            const antenaIzqPA = new THREE.Mesh( geo2Antenas, materialmanchas );
+            antenaIzqPA.position.x = -4.78
+            antenaIzqPA.position.y = 9.2
+            antenaIzqPA.position.z = 13.09
+            antenaIzqPA.receiveShadow = true;
+            antenaIzqPA.castShadow = true;
+            scene.add(antenaIzqPA)
+
+
+            //------------- ESPACIO PARA LAS MANCHAS: ----
+            const geoManchas = new THREE.PlaneGeometry( 0.6, 0.6);
+
+            //--------------   MANCHAS DE LA DERECHA -------------------
+            const mancha1 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha1.position.x = -3.14
+            mancha1.position.y = 1.27
+            mancha1.position.z = 12.38
+            mancha1.rotation.y = unGrado*90
+            mancha1.receiveShadow = true;
+            scene.add(mancha1)
+            //---------------------------------
+            const mancha2 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha2.position.x = -3.14
+            mancha2.position.y = 1.27
+            mancha2.position.z = 11.3
+            mancha2.rotation.y = unGrado*90
+            mancha2.receiveShadow = true;
+            scene.add(mancha2)
+            //---------------------------------
+            const mancha3 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha3.position.x = -3.14
+            mancha3.position.y = 1.27
+            mancha3.position.z = 10.1
+            mancha3.rotation.y = unGrado*90
+            mancha3.receiveShadow = true;
+            scene.add(mancha3)
+
+            // --------------- MANCHAS DE LA IZQUIERDA  -----------------
+            const mancha4 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha4.position.x = -6
+            mancha4.position.y = 1.27
+            mancha4.position.z = 12.38
+            mancha4.rotation.y = unGrado*90
+            mancha4.receiveShadow = true;
+            scene.add(mancha4)
+            //---------------------------------
+            const mancha5 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha5.position.x = -6
+            mancha5.position.y = 1.27
+            mancha5.position.z = 11.3
+            mancha5.rotation.y = unGrado*90
+            mancha5.receiveShadow = true;
+            scene.add(mancha5)
+            //---------------------------------
+            const mancha6 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha6.position.x = -6
+            mancha6.position.y = 1.27
+            mancha6.position.z = 10.1
+            mancha6.rotation.y = unGrado*90
+            mancha6.receiveShadow = true;
+            scene.add(mancha6)
+
+            
+            //-------------  MANCHAS DEL LOMO --------------------
+            const mancha7 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha7.position.x = -4.6
+            mancha7.position.y = 2.37
+            mancha7.position.z = 11.6
+            mancha7.rotation.x = unGrado*90
+            mancha7.receiveShadow = true;
+            scene.add(mancha7)
+            //---------------------------------
+            const mancha8 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha8.position.x = -4.6
+            mancha8.position.y = 2.16
+            mancha8.position.z = 10
+            mancha8.rotation.x = unGrado*65
+            mancha8.receiveShadow = true;
+            scene.add(mancha8)
+
+
+
+            // ------------- MANCHAS DEL CUELLO   -------------------
+            const mancha9 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha9.position.x = -4.6
+            mancha9.position.y = 3.3
+            mancha9.position.z = 13.9
+            mancha9.rotation.x = unGrado*-5
+            mancha9.receiveShadow = true;
+            scene.add(mancha9)
+            //---------------------------------
+            const mancha10 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha10.position.x = -4.6
+            mancha10.position.y = 5.1
+            mancha10.position.z = 13.75
+            mancha10.rotation.x = unGrado*-5
+            mancha10.receiveShadow = true;
+            scene.add(mancha10)
+            //---------------------------------
+            const mancha11 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha11.position.x = -4.6
+            mancha11.position.y = 6.8
+            mancha11.position.z = 13.65
+            mancha11.rotation.x = unGrado*-5
+            mancha11.receiveShadow = true;
+            scene.add(mancha11)
+
+            // ------------- MANCHAS 2 DEL CUELLO   -------------------
+            const mancha12 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha12.position.x = -4.6
+            mancha12.position.y = 3.3
+            mancha12.position.z = 12.526
+            mancha12.rotation.x = unGrado*5
+            mancha12.receiveShadow = true;
+            scene.add(mancha12)
+            //---------------------------------
+            const mancha13 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha13.position.x = -4.6
+            mancha13.position.y = 5.1
+            mancha13.position.z = 12.65
+            mancha13.rotation.x = unGrado*5
+            mancha13.receiveShadow = true;
+            scene.add(mancha13)
+            //---------------------------------
+            const mancha14 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha14.position.x = -4.6
+            mancha14.position.y = 6.8
+            mancha14.position.z = 12.77
+            mancha14.rotation.x = unGrado*5
+            mancha14.receiveShadow = true;
+            scene.add(mancha14)
+
+            //--------------   MANCHAS 3 DEL CUELLO -------------------
+            const mancha15 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha15.position.x = -3.94
+            mancha15.position.y = 4.2
+            mancha15.position.z = 13.2
+            mancha15.rotation.y = unGrado*90
+            mancha15.receiveShadow = true;
+            scene.add(mancha15)
+            //---------------------------------
+            const mancha16 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha16.position.x = -4.05
+            mancha16.position.y = 6
+            mancha16.position.z = 13.2
+            mancha16.rotation.y = unGrado*90
+            mancha16.receiveShadow = true;
+            scene.add(mancha16)
+
+            // --------------- MANCHAS 4 DEL CUELLO  -----------------
+            const mancha17 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha17.position.x = -5.187
+            mancha17.position.y = 4.2
+            mancha17.position.z = 13.2
+            mancha17.rotation.y = unGrado*90
+            mancha17.receiveShadow = true;
+            scene.add(mancha17)
+            //---------------------------------
+            const mancha18 = new THREE.Mesh( geoManchas, materialmanchas );
+            mancha18.position.x = -5.059
+            mancha18.position.y = 6
+            mancha18.position.z = 13.2
+            mancha18.rotation.y = unGrado*90
+            mancha18.receiveShadow = true;
+            scene.add(mancha18)
+   
+
+
+
+                
+            const spotLight = new THREE.SpotLight(0xffffff);
+            //spotLight.position.set(0, 150, 200);
+            spotLight.castShadow = true;
+            spotLight.angle = Math.PI / 3;
+			spotLight.position.x = 10;
+			spotLight.position.z =5;
+			spotLight.position.y =20;
+            scene.add(spotLight);
+
+
+            const spotLightHelper = new THREE.SpotLightHelper( spotLight );
+            scene.add( spotLightHelper );
+ 
+
+
+			camera.position.z = 5;
+            const controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+			function animate() {
+				requestAnimationFrame( animate );
+                controls.update();
+				renderer.render( scene, camera );
+			};
+
+			animate();
+		</script>
+	</body>
+</html>
