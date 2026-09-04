@@ -1,6 +1,6 @@
 # 🌐 Proyectos 3D con Three.js & WebGL
 
-Colección de escenas interactivas en 3D desarrolladas con **Three.js** y **WebGL** para la asignatura de **Computación Gráfica II** (Universidad Central del Este - UCE).
+Colección de escenas interactivas en 3D desarrolladas con **Three.js** y **WebGL**
 
 ---
 
