@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyectos 3D - Three.js</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: radial-gradient(circle at top, #1e293b, #0f172a);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+        p.subtitle {
+            color: #94a3b8;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 750px;
+            width: 100%;
+        }
+        .card {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 36px 28px;
+            flex: 1 1 300px;
+            max-width: 340px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: #38bdf8;
+            box-shadow: 0 20px 40px -8px rgba(56, 189, 248, 0.3);
+            background: rgba(40, 53, 76, 0.9);
+        }
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 18px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .card:hover .icon {
+            transform: scale(1.12);
+        }
+        .card h2 {
+            font-size: 1.55rem;
+            margin-bottom: 12px;
+            color: #38bdf8;
+        }
+        .card p {
+            color: #cbd5e1;
+            font-size: 0.98rem;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 24px;
+            padding: 10px 24px;
+            background: #0284c7;
+            color: white;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+        .card:hover .btn {
+            background: #38bdf8;
+            color: #0f172a;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Proyectos Three.js</h1>
+    <p class="subtitle">Selecciona una escena 3D para interactuar en tiempo real:</p>
+
+    <div class="container">
+        <!-- Escena 1: Casa -->
+        <a href="Casa.html" class="card">
+            <div class="icon">🏠</div>
+            <h2>Casa 3D</h2>
+            <p>Estructura arquitectónica completa con texturas de ladrillos, columnas de madera, ventanas y garaje.</p>
+            <span class="btn">Explorar Casa</span>
+        </a>
+
+        <!-- Escena 2: Jirafa -->
+        <a href="Jirafa.html" class="card">
+            <div class="icon">🦒</div>
+            <h2>Jirafa 3D</h2>
+            <p>Modelo poligonal detallado de una jirafa con articulaciones, manchas procedurales y suelo de césped.</p>
+            <span class="btn">Explorar Jirafa</span>
+        </a>
+    </div>
+
+</body>
+</html>

@@ -2,364 +2,289 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>My first three.js app</title>
+		<title>Casa 3D - Three.js</title>
 		<style>
-			body { margin: 0; }
+			body { margin: 0; overflow: hidden; }
+			.back-btn {
+				position: fixed;
+				top: 15px;
+				left: 15px;
+				background: rgba(15, 23, 42, 0.8);
+				color: #38bdf8;
+				border: 1px solid #38bdf8;
+				padding: 8px 16px;
+				border-radius: 20px;
+				text-decoration: none;
+				font-family: sans-serif;
+				font-size: 14px;
+				font-weight: bold;
+				z-index: 1000;
+				backdrop-filter: blur(5px);
+				transition: all 0.2s ease;
+			}
+			.back-btn:hover {
+				background: #38bdf8;
+				color: #0f172a;
+				box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+			}
 		</style>
 	</head>
 	<body>
+		<a href="index.html" class="back-btn">&#8592; Volver al Menú</a>
 		<script src="js/three.js"></script>
 		<script src="js/OrbitControls.js"></script>
 
 		<script>
 			const scene = new THREE.Scene();
-			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+			scene.background = new THREE.Color( 0x87CEEB ); // Fondo cielo azul
 
-			const renderer = new THREE.WebGLRenderer();
+			const camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			const renderer = new THREE.WebGLRenderer({ antialias: true });
 			renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+			renderer.outputEncoding = THREE.sRGBEncoding;
 
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 
-			//scrips de diseños de la casa primer nivel
+			// Carga de texturas casa primer nivel
 			const casaloader = new THREE.TextureLoader();
-            // load a resource
-			let casaTexture = casaloader.load(
-				'textures/ladrillo.jpg'
-			);
+			let casaTexture = casaloader.load('textures/ladrillo.jpg');
 			casaTexture.wrapS = THREE.RepeatWrapping;
 			casaTexture.wrapT = THREE.RepeatWrapping;
 			casaTexture.repeat.set( 3, 2 );
 
 			const geometry = new THREE.BoxGeometry( 90, 40, 90 );
-			const material = new THREE.MeshLambertMaterial( { map:casaTexture, side: THREE.DoubleSide});
+			const material = new THREE.MeshLambertMaterial( { map: casaTexture, side: THREE.DoubleSide });
 			const cube = new THREE.Mesh( geometry, material );
-			cube.position.y  = 11;
+			cube.position.y = 11;
 			cube.receiveShadow = true;
 			cube.castShadow = true;
 			scene.add( cube );
 
-
-
-			//script de diseño del segundo nivel
+			// Diseño del segundo nivel
 			const Niveloader = new THREE.TextureLoader();
-            // load a resource
-			let nivelTexture = Niveloader.load(
-				'textures/ladrillo.jpg'
-			);
+			let nivelTexture = Niveloader.load('textures/ladrillo.jpg');
 			nivelTexture.wrapS = THREE.RepeatWrapping;
 			nivelTexture.wrapT = THREE.RepeatWrapping;
 			nivelTexture.repeat.set( 3, 2 );
 
 			const nivelgeometry = new THREE.BoxGeometry( 90, 40, 90 );
-			const nivelmaterial = new THREE.MeshLambertMaterial( { map:nivelTexture, side: THREE.DoubleSide});
+			const nivelmaterial = new THREE.MeshLambertMaterial( { map: nivelTexture, side: THREE.DoubleSide });
 			const nivelcube = new THREE.Mesh( nivelgeometry, nivelmaterial );
-			nivelcube.position.y  = 11;
-			nivelcube.position.x  = -90;
+			nivelcube.position.y = 11;
+			nivelcube.position.x = -90;
 			nivelcube.position.z = 40;
 			nivelcube.receiveShadow = true;
 			nivelcube.castShadow = true;
 			scene.add( nivelcube );
 
-
-			//scripts techo#1
+			// Techo #1
 			const roofLoader = new THREE.TextureLoader();
-            // load a resource
-			let roofTexture = roofLoader.load(
-				'textures/techo.jpg'
-			);
+			let roofTexture = roofLoader.load('textures/techo.jpg');
 			roofTexture.wrapS = THREE.RepeatWrapping;
 			roofTexture.wrapT = THREE.RepeatWrapping;
 			roofTexture.repeat.set( 4, 4 );
 
-			const coneRgGeometry = new THREE.ConeGeometry( 63, 25, 4 ,20 );
-            const coneRgMaterial = new THREE.MeshLambertMaterial( {map: roofTexture, side: THREE.DoubleSide} );
-            const cone = new THREE.Mesh( coneRgGeometry, coneRgMaterial );
+			const coneRgGeometry = new THREE.ConeGeometry( 63, 25, 4, 20 );
+			const coneRgMaterial = new THREE.MeshLambertMaterial( { map: roofTexture, side: THREE.DoubleSide } );
+			const cone = new THREE.Mesh( coneRgGeometry, coneRgMaterial );
 			cone.position.y = 43.7;
 			cone.position.x = 0;
-			cone.rotation.y = 150;
+			cone.rotation.y = Math.PI / 4; // 45 grados para alinear con las paredes
 			cone.castShadow = true;
 			cone.receiveShadow = true;
-			//cone.rotation.z = -11;
-            scene.add( cone );
- 
-			//scripts techo#2
-			let coneLfTexture = roofLoader.load(
-				'textures/palma.jpg'
-			);
+			scene.add( cone );
+
+			// Techo #2
+			let coneLfTexture = roofLoader.load('textures/palma.jpg');
 			coneLfTexture.wrapS = THREE.RepeatWrapping;
 			coneLfTexture.wrapT = THREE.RepeatWrapping;
 			coneLfTexture.repeat.set( 7, 6 );
 
-			const coneLfGeometry = new THREE.ConeGeometry( 63, 25, 4 ,5 );
-            const coneLfMaterial = new THREE.MeshLambertMaterial( {map: coneLfTexture,wireframe: false} );
-            const coneLf = new THREE.Mesh( coneLfGeometry, coneLfMaterial );
+			const coneLfGeometry = new THREE.ConeGeometry( 63, 25, 4, 5 );
+			const coneLfMaterial = new THREE.MeshLambertMaterial( { map: coneLfTexture, side: THREE.DoubleSide } );
+			const coneLf = new THREE.Mesh( coneLfGeometry, coneLfMaterial );
 			coneLf.position.y = 43.7;
 			coneLf.position.x = -90;
 			coneLf.position.z = -49;
-			coneLf.rotation.y = 150;
+			coneLf.rotation.y = Math.PI / 4;
 			coneLf.receiveShadow = true;
 			coneLf.castShadow = true;
-			//cone.rotation.z = -11;
-            scene.add( coneLf );
+			scene.add( coneLf );
 
-			//scripts de las columnas 
-			//columna derecha
-
-			let WoodTexture = roofLoader.load(
-				'textures/maderaRustica.jpg'
-			);
+			// Columnas de madera
+			let WoodTexture = roofLoader.load('textures/maderaRustica.jpg');
 			WoodTexture.wrapS = THREE.RepeatWrapping;
 			WoodTexture.wrapT = THREE.RepeatWrapping;
-			WoodTexture.repeat.set( 1, 0 );
+			WoodTexture.repeat.set( 1, 2 );
 
 			const columnRGeometry = new THREE.CylinderGeometry( 4, 4, 40, 32 );
-            const columnRMaterial = new THREE.MeshLambertMaterial( {map: WoodTexture , wireframe: false} );
-            const cylinderR = new THREE.Mesh( columnRGeometry, columnRMaterial );
-			cylinderR.position.x = -128;
-			cylinderR.position.y = 11.5;
-			cylinderR.position.z = -88;
+			const columnRMaterial = new THREE.MeshLambertMaterial( { map: WoodTexture } );
+
+			const cylinderR = new THREE.Mesh( columnRGeometry, columnRMaterial );
+			cylinderR.position.set(-128, 11.5, -88);
 			cylinderR.receiveShadow = true;
 			cylinderR.castShadow = true;
-            scene.add( cylinderR );
+			scene.add( cylinderR );
 
-			//columna de la izquierda
-			const columnLGeometry = new THREE.CylinderGeometry( 4, 4, 40, 32 );
-            const columnLMaterial = new THREE.MeshLambertMaterial( {map: WoodTexture , wireframe: false} );
-            const cylinderL = new THREE.Mesh( columnLGeometry, columnLMaterial );
-			cylinderL.position.x = -52;
-			cylinderL.position.y = 11.5;
-			cylinderL.position.z = -88;
-            scene.add( cylinderL );
+			const cylinderL = new THREE.Mesh( columnRGeometry, columnRMaterial );
+			cylinderL.position.set(-52, 11.5, -88);
+			scene.add( cylinderL );
 
-			//scripts colunmas de la derecha parte baja
-			const columnLbGeometry = new THREE.CylinderGeometry( 4, 4, 40, 32 );
-            const columnLbMaterial = new THREE.MeshLambertMaterial( {map: WoodTexture , wireframe: false} );
-            const cylinderLb = new THREE.Mesh( columnLbGeometry, columnLbMaterial );
-			cylinderLb.position.x = -52;
-			cylinderLb.position.y = 11.5;
-			cylinderLb.position.z = -8;
-            scene.add( cylinderLb );
+			const cylinderLb = new THREE.Mesh( columnRGeometry, columnRMaterial );
+			cylinderLb.position.set(-52, 11.5, -8);
+			scene.add( cylinderLb );
 
-			//scripts colunmas de la derecha parte baja
-			const columnRbGeometry = new THREE.CylinderGeometry( 4, 4, 40, 32 );
-            const columnRbMaterial = new THREE.MeshLambertMaterial( {map: WoodTexture , wireframe: false} );
-            const cylinderRb = new THREE.Mesh( columnRbGeometry, columnRbMaterial );
-			cylinderRb.position.x = -128;
-			cylinderRb.position.y = 11.5;
-			cylinderRb.position.z = -8;
+			const cylinderRb = new THREE.Mesh( columnRGeometry, columnRMaterial );
+			cylinderRb.position.set(-128, 11.5, -8);
 			cylinderRb.receiveShadow = true;
-            scene.add( cylinderRb );
-			
-			
-			//scripts techo#3 frente
-			const oppositeConeGeometry = new THREE.ConeGeometry( 63, 25, 4 ,20 );
-            const oppositeConeMaterial = new THREE.MeshLambertMaterial( {map: roofTexture, side: THREE.DoubleSide} );
-            const oppositeCone = new THREE.Mesh( oppositeConeGeometry, oppositeConeMaterial );
-			oppositeCone.position.y = 43.7;
-			oppositeCone.position.x = -90;
-			oppositeCone.position.z = 40;
-			oppositeCone.rotation.y = 150;
+			scene.add( cylinderRb );
+
+			// Techo #3 frente
+			const oppositeCone = new THREE.Mesh( coneRgGeometry, coneRgMaterial );
+			oppositeCone.position.set(-90, 43.7, 40);
+			oppositeCone.rotation.y = Math.PI / 4;
 			oppositeCone.castShadow = true;
 			oppositeCone.receiveShadow = true;
-			//cone.rotation.z = -11;
-            scene.add( oppositeCone );
+			scene.add( oppositeCone );
 
+			// Suelo de césped
+			const planegeometry = new THREE.PlaneGeometry( 500, 500 );
+			let texture = casaloader.load('textures/grass.jpg');
+			texture.wrapS = THREE.RepeatWrapping;
+			texture.wrapT = THREE.RepeatWrapping;
+			texture.repeat.set( 6, 6 );
 
-			//scripts de el suelo
-		    const planegeometry = new THREE.PlaneGeometry( 500, 500 );
-			const loader = new THREE.TextureLoader();
-            // load a resource
-            let texture = loader.load(
-         	 'textures/grass.jpg'
-             );
-             texture.wrapS = THREE.RepeatWrapping;
-             texture.wrapT = THREE.RepeatWrapping;
-             texture.repeat.set( 2, 2 );
-
-			const planematerial = new THREE.MeshLambertMaterial( {map: texture, side: THREE.DoubleSide});
-		    const plane = new THREE.Mesh( planegeometry, planematerial );
-			plane.rotation.x = Math.PI /2;
+			const planematerial = new THREE.MeshLambertMaterial( { map: texture, side: THREE.DoubleSide });
+			const plane = new THREE.Mesh( planegeometry, planematerial );
+			plane.rotation.x = Math.PI / 2;
 			plane.position.y = -9.5;
 			plane.receiveShadow = true;
-            scene.add( plane );
+			scene.add( plane );
 
-
-			//scripts entrada al garaje
-			const DoorLoader = new THREE.TextureLoader();
-            // load a resource
-            let DoorTexture = loader.load(
-         	 'textures/piedra.jpg'
-             );
-             DoorTexture.wrapS = THREE.RepeatWrapping;
-             DoorTexture.wrapT = THREE.RepeatWrapping;
-             DoorTexture.repeat.set( 7, 6 );
+			// Entrada al garaje (camino de piedra)
+			let DoorTexture = casaloader.load('textures/piedra.jpg');
+			DoorTexture.wrapS = THREE.RepeatWrapping;
+			DoorTexture.wrapT = THREE.RepeatWrapping;
+			DoorTexture.repeat.set( 4, 6 );
 
 			const DoorPlane = new THREE.PlaneGeometry( 60, 100 );
-			const DoorPlaneMaterial = new THREE.MeshBasicMaterial( {map: DoorTexture, side: THREE.DoubleSide});
-		    const Door = new THREE.Mesh( DoorPlane, DoorPlaneMaterial );
+			const DoorPlaneMaterial = new THREE.MeshLambertMaterial( { map: DoorTexture, side: THREE.DoubleSide });
+			const Door = new THREE.Mesh( DoorPlane, DoorPlaneMaterial );
 			Door.rotation.x = Math.PI / 2;
-			Door.position.y = -9;
-			Door.position.z = 95;
-            scene.add( Door );
- 
-			//scripts pasillo de la puerta principal
-			let DoorTexture1 = loader.load(
-         	 'textures/piedra.jpg'
-             );
-             DoorTexture1.wrapS = THREE.RepeatWrapping;
-             DoorTexture1.wrapT = THREE.RepeatWrapping;
-             DoorTexture1.repeat.set( 2, 2 );
-			 
+			Door.position.set(0, -9.2, 95);
+			Door.receiveShadow = true;
+			scene.add( Door );
+
+			// Pasillo de la puerta principal
 			const DoorPlane2 = new THREE.PlaneGeometry( 20, 20 );
-			const DoorPlaneMaterial2 = new THREE.MeshBasicMaterial( {map: DoorTexture1, side: THREE.DoubleSide});
-		    const Door2 = new THREE.Mesh( DoorPlane2, DoorPlaneMaterial2 );
+			const DoorPlaneMaterial2 = new THREE.MeshLambertMaterial( { map: DoorTexture, side: THREE.DoubleSide });
+			const Door2 = new THREE.Mesh( DoorPlane2, DoorPlaneMaterial2 );
 			Door2.rotation.x = Math.PI / 2;
-			Door2.position.x = -60;
-			Door2.position.y = -9;
-			Door2.position.z = 95;
-            scene.add( Door2 );
+			Door2.position.set(-60, -9.2, 95);
+			Door2.receiveShadow = true;
+			scene.add( Door2 );
 
-			const DoorPlane3 = new THREE.PlaneGeometry( 20, 20 );
-			const DoorPlaneMaterial3 = new THREE.MeshBasicMaterial( {map: DoorTexture1, side: THREE.DoubleSide});
-		    const Door3 = new THREE.Mesh( DoorPlane3, DoorPlaneMaterial3 );
+			const Door3 = new THREE.Mesh( DoorPlane2, DoorPlaneMaterial2 );
 			Door3.rotation.x = Math.PI / 2;
-			Door3.position.x = -40;
-			Door3.position.y = -9;
-			Door3.position.z = 95;
-            scene.add( Door3 );
+			Door3.position.set(-40, -9.2, 95);
+			Door3.receiveShadow = true;
+			scene.add( Door3 );
 
+			// Puerta del garaje
+			let garajeTexture = casaloader.load('textures/garaje.jpg');
+			garajeTexture.wrapS = THREE.RepeatWrapping;
+			garajeTexture.wrapT = THREE.RepeatWrapping;
+			garajeTexture.repeat.set( 1, 1 );
 
-
-			//scripts puerta del garaje
 			const garajePlane = new THREE.PlaneGeometry( 60, 30 );
-			const garajeLoader = new THREE.TextureLoader();
-            // load a resource
-            let garajeTexture = loader.load(
-         	 'textures/garaje.jpg'
-             );
-             garajeTexture.wrapS = THREE.RepeatWrapping;
-             garajeTexture.wrapT = THREE.RepeatWrapping;
-             garajeTexture.repeat.set( 2, 2 );
+			const garajePlaneMaterial = new THREE.MeshLambertMaterial( { map: garajeTexture, side: THREE.DoubleSide });
+			const garaje = new THREE.Mesh( garajePlane, garajePlaneMaterial );
+			garaje.position.set(0, 6, 45.8);
+			scene.add( garaje );
 
-			const garajePlaneMaterial = new THREE.MeshLambertMaterial( {map: garajeTexture, side: THREE.DoubleSide});
-		    const garaje = new THREE.Mesh( garajePlane, garajePlaneMaterial );
-			garaje.rotation.x = 0;
-			garaje.position.y = 6;
-			garaje.position.z = 45.8;
-            scene.add( garaje );
-
-	
-
-			//scritps cristales
-			const Loader = new THREE.TextureLoader();
-            // load a resource
-			let glassTexture = Loader.load(
-				'textures/cristal.jpg'
-			);
+			// Cristales de la ventana
+			let glassTexture = casaloader.load('textures/cristal.jpg');
 			glassTexture.wrapS = THREE.RepeatWrapping;
 			glassTexture.wrapT = THREE.RepeatWrapping;
 			glassTexture.repeat.set( 2, 1 );
 
 			const glassGeometry = new THREE.PlaneGeometry( 27, 17 );
-			const glassmaterial = new THREE.MeshPhongMaterial( { map:glassTexture, side: THREE.DoubleSide});
+			const glassmaterial = new THREE.MeshPhongMaterial( { 
+				map: glassTexture, 
+				side: THREE.DoubleSide,
+				transparent: true,
+				opacity: 0.85
+			});
 			const glass = new THREE.Mesh( glassGeometry, glassmaterial );
-			glass.position.y  = 16;
-			glass.position.x  = -110;
-			glass.position.z = 86;
+			glass.position.set(-110, 16, 86);
 			scene.add( glass );
 
-
-			//scritps de la marco puerta 
-            // load a resource
-			let doorTexture = Loader.load(
-				'textures/puerta.jpg'
-			);
+			// Marco y puerta
+			let doorTexture = casaloader.load('textures/puerta.jpg');
 			doorTexture.wrapS = THREE.RepeatWrapping;
 			doorTexture.wrapT = THREE.RepeatWrapping;
-			doorTexture.repeat.set( 1, 0 );
+			doorTexture.repeat.set( 1, 1 );
 
-			const doorGeometry = new THREE.BoxGeometry( 20, 35,1 );
-			const doormaterial = new THREE.MeshLambertMaterial( { map:doorTexture, side: THREE.DoubleSide});
-			const door = new THREE.Mesh( doorGeometry, doormaterial );
-			door.position.y  = 10;
-			door.position.x  = -60;
-			door.position.z = 85;
+			const frameMaterial = new THREE.MeshLambertMaterial( { map: doorTexture, side: THREE.DoubleSide });
+
+			const doorGeometry = new THREE.BoxGeometry( 20, 35, 1 );
+			const door = new THREE.Mesh( doorGeometry, frameMaterial );
+			door.position.set(-60, 10, 85);
 			scene.add( door );
 
-			//scripts del marco del garaje 
-			const garajeDoorGeometry = new THREE.BoxGeometry( 65, 32,1 );
-			const garajeDoormaterial = new THREE.MeshLambertMaterial( { map:doorTexture, side: THREE.DoubleSide});
-			const garajeDoor = new THREE.Mesh( garajeDoorGeometry, garajeDoormaterial );
-			garajeDoor.position.y  = 7;
-			garajeDoor.position.x  = 0;
-			garajeDoor.position.z = 45;
+			const garajeDoorGeometry = new THREE.BoxGeometry( 65, 32, 1 );
+			const garajeDoor = new THREE.Mesh( garajeDoorGeometry, frameMaterial );
+			garajeDoor.position.set(0, 7, 45);
 			scene.add( garajeDoor );
 
 			const windowFrameGeometry = new THREE.BoxGeometry( 30, 20, 1 );
-			const windowFramematerial = new THREE.MeshLambertMaterial( { map:doorTexture, side: THREE.DoubleSide});
-			const windowFrame = new THREE.Mesh( windowFrameGeometry, windowFramematerial );
-			windowFrame.position.y  = 16;
-			windowFrame.position.x  = -110;
-			windowFrame.position.z = 85;
+			const windowFrame = new THREE.Mesh( windowFrameGeometry, frameMaterial );
+			windowFrame.position.set(-110, 16, 85);
 			scene.add( windowFrame );
 
-			// scritps division de la ventana
-			const divGlassGeometry = new THREE.BoxGeometry( 2, 20,1 );
-			const divGlassmaterial = new THREE.MeshLambertMaterial( { map:doorTexture, side: THREE.DoubleSide});
-			const divGlass = new THREE.Mesh( divGlassGeometry, divGlassmaterial );
-			divGlass.position.y  = 16;
-			divGlass.position.x  = -110;
-			divGlass.position.z = 86;
+			const divGlassGeometry = new THREE.BoxGeometry( 2, 20, 1.2 );
+			const divGlass = new THREE.Mesh( divGlassGeometry, frameMaterial );
+			divGlass.position.set(-110, 16, 86);
 			scene.add( divGlass );
 
-			//scritps textura de la puerta
-            // load a resource
-			let doorPlaneTexture = Loader.load(
-				'textures/puerta.jpg'
-			);
-			doorPlaneTexture.wrapS = THREE.RepeatWrapping;
-			doorPlaneTexture.wrapT = THREE.RepeatWrapping;
-			doorPlaneTexture.repeat.set( 1, 1 );
-
 			const doorPlaneGeometry = new THREE.PlaneGeometry( 18, 33 );
-			const doorPlanematerial = new THREE.MeshLambertMaterial( { map:doorPlaneTexture, side: THREE.DoubleSide});
+			const doorPlanematerial = new THREE.MeshLambertMaterial( { map: doorTexture, side: THREE.DoubleSide });
 			const doorPlane = new THREE.Mesh( doorPlaneGeometry, doorPlanematerial );
-			doorPlane.position.y  = 10;
-			doorPlane.position.x  = -60;
-			doorPlane.position.z = 85.7;
+			doorPlane.position.set(-60, 10, 85.7);
 			scene.add( doorPlane );
 
+			// Iluminación
+			const ambientLight = new THREE.AmbientLight( 0xffffff, 0.6 );
+			scene.add( ambientLight );
 
-			//scripts para agregar la luz
-			const spotLight = new THREE.SpotLight( 0xffffff );
-            scene.add(spotLight);
-            spotLight.position.set(0,150,200);
-			spotLight.angle = Math.PI / 3;
-			//spotLight.position.x = 50;
-			//spotLight.position.z =1;
-            spotLight.castShadow =true;
-			
+			const sunLight = new THREE.DirectionalLight( 0xfffaed, 0.85 );
+			sunLight.position.set( 120, 220, 180 );
+			sunLight.castShadow = true;
+			sunLight.shadow.mapSize.width = 2048;
+			sunLight.shadow.mapSize.height = 2048;
+			scene.add( sunLight );
 
-			const spotLightHelper = new THREE.SpotLightHelper( spotLight );
-     		scene.add( spotLightHelper );
-
-
-			camera.position.z = 5;
-			const controls = new THREE.OrbitControls(camera,renderer.domElement);
+			// Cámara y Controles centrados
+			camera.position.set( -45, 80, 230 );
+			const controls = new THREE.OrbitControls( camera, renderer.domElement );
+			controls.target.set( -45, 20, 20 );
+			controls.maxPolarAngle = Math.PI / 2 - 0.02;
 			controls.update();
+
+			window.addEventListener('resize', () => {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			});
 
 			function animate() {
 				requestAnimationFrame( animate );
-
-				//cube.rotation.x += 0.01;
-				//cube.rotation.y += 0.01;
-				//cube.rotation.z += 0.01;
-
 				controls.update();
 				renderer.render( scene, camera );
-			};
+			}
 
 			animate();
 		</script>
